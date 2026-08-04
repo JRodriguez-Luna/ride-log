@@ -1,5 +1,6 @@
 import express from 'express';
 import pg from 'pg';
+import cors from 'cors';
 
 const app = express();
 const PORT = 3000;
@@ -9,6 +10,7 @@ const db = new pg.Pool({
 });
 
 app.use(express.json());
+app.use(cors())
 
 app.get('/', async (req, res, next) => {
   try {
@@ -63,7 +65,7 @@ app.post('/api/rides', async (req, res, next) => {
   }
 });
 
-// GET
+// GET via Id
 app.get('/api/rides/:paramId', async (req, res, next) => {
   try {
     const rideId = req.params.paramId;
@@ -86,6 +88,24 @@ app.get('/api/rides/:paramId', async (req, res, next) => {
     res.status(200).json(result);
   } catch (err) {
     next(err);
+  }
+});
+
+// Get all
+app.get('/api/rides', async (req, res, next) => {
+  try {
+    const sql = `
+      select * from rides;
+    `;
+
+    const result = (await db.query(sql)).rows;
+    if (!result) {
+      throw new Error('failed to get data /rides');
+    }
+
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
   }
 });
 
