@@ -19,7 +19,6 @@ app.get('/', async (req, res, next) => {
   }
 });
 
-
 // Inserting
 app.post('/api/rides', async (req, res, next) => {
   try {
@@ -28,7 +27,7 @@ app.post('/api/rides', async (req, res, next) => {
 
     if (
       !title ||
-      !description||
+      !description ||
       distance < 0 ||
       !avg_speed ||
       !avg_power ||
@@ -41,21 +40,54 @@ app.post('/api/rides', async (req, res, next) => {
       insert into rides ("title", "description", "distance", "avg_speed", "avg_power", "ride_date")
       values ($1, $2, $3, $4, $5, $6)
       returning *;
-    `
+    `;
 
-    const [rides] = (await db.query(sql, [title, description, distance, avg_speed, avg_power, ride_date])).rows
+    const [rides] = (
+      await db.query(sql, [
+        title,
+        description,
+        distance,
+        avg_speed,
+        avg_power,
+        ride_date,
+      ])
+    ).rows;
     if (!rides) {
-      throw new Error('failed to post ride log')
+      throw new Error('failed to post ride log');
     }
 
     // send status and json
-    res.status(201).json(rides)
-
+    res.status(201).json(rides);
   } catch (e) {
     next(e);
   }
 });
 
+// GET
+app.get('/api/rides/:paramId', async (req, res, next) => {
+  try {
+    const rideId = req.params.paramId;
+
+    if (isNaN(+rideId) || !Number.isInteger(+rideId) || +rideId < 1) {
+      throw new Error(`User with Id ${rideId} does not exist.`);
+    }
+
+    const sql = `
+      select * from "rides"
+      where "id" = $1
+    `;
+    const param = [rideId];
+    const [result] = (await db.query(sql, param)).rows;
+
+    if (!result) {
+      throw new Error('Get /api/rides/:paramId Failed');
+    }
+
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Always at the bottom
 app.listen(PORT, () => {
