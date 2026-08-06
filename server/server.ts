@@ -1,6 +1,7 @@
 import express from 'express';
 import pg from 'pg';
 import cors from 'cors';
+import argon2 from 'argon2';
 
 const app = express();
 const PORT = 3000;
@@ -10,8 +11,49 @@ const db = new pg.Pool({
 });
 
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
+// Auth
+
+// Sign Up
+app.post('/api/auth/sign-up', async (req, res, next) => {
+  try {
+    // entry from user
+    const { username, email, password, first_name, last_name } = req.body;
+
+    // if missing required entry, send error
+    if (!username || !email || !password || !first_name || !last_name) {
+      throw new Error('Invalid or missing entry.');
+    }
+
+    // hash password
+    const password_hash = await argon2.hash(password);
+
+    // sql script to insert new user
+    const sql = `
+      insert into "users" ("username", "email", "password_hash", "first_name", "last_name")
+      values($1, $2, $3, $4, $5)
+      returning "id", "username", "email", "created_at";
+    `;
+
+    // destructing to put the values in
+    const param = [username, email, password_hash, first_name, last_name]
+    const [user] = (await db.query(sql, param)).rows
+
+    if (!user) {
+      throw new Error(`Failed to retrive user: ${username}`)
+    }
+
+    res.status(201).json(user)
+
+  } catch (error) {
+    next(error)
+  }
+});
+
+//
+
+//  GET all
 app.get('/', async (req, res, next) => {
   try {
     res.send('Hello World!');

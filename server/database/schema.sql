@@ -1,3 +1,4 @@
+-- Drops data and recreates a branch new one for every run on postgresql
 DROP TABLE IF EXISTS rides;
 DROP TABLE IF EXISTS users;
 
