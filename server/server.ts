@@ -37,21 +37,53 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
     `;
 
     // destructing to put the values in
-    const param = [username, email, password_hash, first_name, last_name]
-    const [user] = (await db.query(sql, param)).rows
+    const param = [username, email, password_hash, first_name, last_name];
+    const [user] = (await db.query(sql, param)).rows;
 
     if (!user) {
-      throw new Error(`Failed to retrive user: ${username}`)
+      throw new Error(`Failed to retrive user: ${username}`);
     }
 
-    res.status(201).json(user)
-
+    res.status(201).json(user);
   } catch (error) {
-    next(error)
+    next(error);
   }
 });
 
-//
+// Sign in
+app.post('/api/auth/sign-in', async (req, res, next) => {
+  try {
+    // get user input
+    const { username, password } = req.body;
+
+    // if missing input, send error
+    if (!username || !password) {
+      throw new Error('Invalid or missing entry');
+    }
+
+    // sql script to search for username
+    const sql = `
+    select "username", "email", "password_hash" from "users"
+    where "username" = $1;
+  `;
+
+    const param = [username];
+    const [user] = (await db.query(sql, param)).rows;
+
+    if (!user) {
+      throw new Error(`Can not find user ${user}`);
+    }
+
+    const validPassword = await argon2.verify(user.password_hash, password);
+    if (!validPassword) {
+      throw new Error('Invalid email or password');
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+});
 
 //  GET all
 app.get('/', async (req, res, next) => {
