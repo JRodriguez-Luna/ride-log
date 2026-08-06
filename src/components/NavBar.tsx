@@ -7,8 +7,8 @@ export const NavBar = () => {
     <nav className="flex justify-center border p-4">
       <ul className="flex gap-5">
         {
-          navs.map(nav => (
-            <li>{nav}</li>
+          navs.map((nav, index) => (
+            <li key={index}>{nav}</li>
           ))
         }
       </ul>

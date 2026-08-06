@@ -9,7 +9,7 @@ export const RideForm = ({ onAddRide }: RideFormProps) => {
     try {
       const data = Object.fromEntries(formData);
 
-      const response = await fetch('http://localhost:3000/api/rides/1', {
+      const response = await fetch('http://localhost:3000/api/rides/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
