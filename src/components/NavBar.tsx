@@ -1,5 +1,3 @@
-import { type ReactNode } from "react";
-
 const navs = ['Home', 'Rides']
 
 export const NavBar = () => {
