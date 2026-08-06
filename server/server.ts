@@ -1,7 +1,14 @@
+import 'dotenv/config';
 import express from 'express';
 import pg from 'pg';
 import cors from 'cors';
 import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
+
+const secret = process.env.TOKEN_SECRET;
+if (!secret) {
+  throw new Error('TOKEN_SECRET not found in .env');
+}
 
 const app = express();
 const PORT = 3000;
@@ -63,7 +70,7 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
 
     // sql script to search for username
     const sql = `
-    select "username", "email", "password_hash" from "users"
+    select "id", "username", "email", "password_hash" from "users"
     where "username" = $1;
   `;
 
@@ -71,15 +78,27 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
     const [user] = (await db.query(sql, param)).rows;
 
     if (!user) {
-      throw new Error(`Can not find user ${user}`);
+      throw new Error(`Invalid login`);
     }
 
+    // validate password
     const validPassword = await argon2.verify(user.password_hash, password);
     if (!validPassword) {
       throw new Error('Invalid email or password');
     }
 
-    res.status(200).json(user);
+    // jwt tokenize
+    const payload = {
+      id: user.id,
+      username: user.username,
+    };
+
+    const token = jwt.sign(payload, secret);
+
+    res.status(200).json({
+      user: payload,
+      token,
+    });
   } catch (error) {
     next(error);
   }
