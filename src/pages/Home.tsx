@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
-
-type Rides = {
-  id: number;
-  title: string;
-  description: string;
-  distance: string;
-  avg_speed: string;
-  avg_power: number;
-  ride_date: string;
-  created_at: string;
-};
+import { NavBar } from '../components/NavBar';
+import { Card } from '../components/Card';
+import { RideForm } from '../components/RideForm';
+import { type Rides } from '../types';
 
 export const Home = () => {
   const [rides, setRides] = useState<Rides[]>([]);
+
+  // Add a new ride
+  const handleAddRide = (newRide: Rides) => {
+    setRides([...rides, newRide]);
+  };
 
   useEffect(() => {
     const fetchRides = async () => {
@@ -36,14 +34,16 @@ export const Home = () => {
   }, []);
 
   return (
-    <>
-      <div>
-        <ul>
-          {rides.map((ride) => (
-            <li key={ride.id}>{ride.title}</li>
-          ))}
-        </ul>
-      </div>
-    </>
+    <div className='flex flex-col gap-2 min-h-dvh'>
+      <NavBar />
+      <main className='flex mx-28 border p-4'>
+        {rides.map((ride) => (
+          <Card key={ride.id} ride={ride} />
+        ))}
+
+        {/* Form */}
+        <RideForm onAddRide={handleAddRide} />
+      </main>
+    </div>
   );
 };
