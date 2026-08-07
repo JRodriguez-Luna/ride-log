@@ -4,6 +4,7 @@ import pg from 'pg';
 import cors from 'cors';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
+import { authMiddleware } from './lib/auth-middleware.ts';
 
 const secret = process.env.TOKEN_SECRET;
 if (!secret) {
@@ -104,18 +105,8 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
   }
 });
 
-//  GET all
-app.get('/', async (req, res, next) => {
-  try {
-    res.send('Hello World!');
-    console.log('Terminal: Hello, World!');
-  } catch (e) {
-    next(e);
-  }
-});
-
 // Inserting
-app.post('/api/rides', async (req, res, next) => {
+app.post('/api/rides', authMiddleware, async (req, res, next) => {
   try {
     const { title, description, distance, avg_speed, avg_power, ride_date } =
       req.body;
@@ -132,8 +123,8 @@ app.post('/api/rides', async (req, res, next) => {
     }
 
     const sql = `
-      insert into rides ("title", "description", "distance", "avg_speed", "avg_power", "ride_date")
-      values ($1, $2, $3, $4, $5, $6)
+      insert into rides ("title", "description", "distance", "avg_speed", "avg_power", "ride_date", "user_id")
+      values ($1, $2, $3, $4, $5, $6, $7)
       returning *;
     `;
 
@@ -145,6 +136,7 @@ app.post('/api/rides', async (req, res, next) => {
         avg_speed,
         avg_power,
         ride_date,
+        req.user?.id
       ])
     ).rows;
     if (!rides) {
@@ -159,7 +151,7 @@ app.post('/api/rides', async (req, res, next) => {
 });
 
 // GET via Id
-app.get('/api/rides/:paramId', async (req, res, next) => {
+app.get('/api/rides/:paramId', authMiddleware, async (req, res, next) => {
   try {
     const rideId = req.params.paramId;
 
@@ -169,9 +161,10 @@ app.get('/api/rides/:paramId', async (req, res, next) => {
 
     const sql = `
       select * from "rides"
-      where "id" = $1
+      where "id" = $1 and "user_id" = $2;
     `;
-    const param = [rideId];
+
+    const param = [rideId, req.user?.id];
     const [result] = (await db.query(sql, param)).rows;
 
     if (!result) {
@@ -185,13 +178,14 @@ app.get('/api/rides/:paramId', async (req, res, next) => {
 });
 
 // Get all
-app.get('/api/rides', async (req, res, next) => {
+app.get('/api/rides', authMiddleware, async (req, res, next) => {
   try {
     const sql = `
-      select * from rides;
+      select * from rides
+      where "user_id" = $1
     `;
 
-    const result = (await db.query(sql)).rows;
+    const result = (await db.query(sql, [req.user?.id])).rows;
     if (!result) {
       throw new Error('failed to get data /rides');
     }
