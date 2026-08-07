@@ -5,6 +5,8 @@ import cors from 'cors';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { authMiddleware } from './lib/auth-middleware.ts';
+import { errorMiddleware } from './lib/error-middleware.ts';
+import { ClientError } from './lib/client-error.ts';
 
 const secret = process.env.TOKEN_SECRET;
 if (!secret) {
@@ -31,7 +33,7 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
 
     // if missing required entry, send error
     if (!username || !email || !password || !first_name || !last_name) {
-      throw new Error('Invalid or missing entry.');
+      throw new ClientError(400, 'Invalid or missing entry');
     }
 
     // hash password
@@ -49,7 +51,7 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
     const [user] = (await db.query(sql, param)).rows;
 
     if (!user) {
-      throw new Error(`Failed to retrive user: ${username}`);
+      throw new ClientError(500, `Failed to retrive user: ${username}`);
     }
 
     res.status(201).json(user);
@@ -66,7 +68,7 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
 
     // if missing input, send error
     if (!username || !password) {
-      throw new Error('Invalid or missing entry');
+      throw new ClientError(400, 'Invalid or missing entry')
     }
 
     // sql script to search for username
@@ -79,13 +81,13 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
     const [user] = (await db.query(sql, param)).rows;
 
     if (!user) {
-      throw new Error(`Invalid login`);
+      throw new ClientError(401, 'Invalid username or password')
     }
 
     // validate password
     const validPassword = await argon2.verify(user.password_hash, password);
     if (!validPassword) {
-      throw new Error('Invalid email or password');
+      throw new ClientError(401, 'Invalid username or password')
     }
 
     // jwt tokenize
@@ -119,7 +121,7 @@ app.post('/api/rides', authMiddleware, async (req, res, next) => {
       !avg_power ||
       !ride_date
     ) {
-      throw new Error('401, No data found for /api/rides');
+      throw new ClientError(400, 'Invalid or missing entry');
     }
 
     const sql = `
@@ -140,7 +142,7 @@ app.post('/api/rides', authMiddleware, async (req, res, next) => {
       ])
     ).rows;
     if (!rides) {
-      throw new Error('failed to post ride log');
+      throw new ClientError(500, `User id ${req.user?.id} does not exists.`)
     }
 
     // send status and json
@@ -156,7 +158,7 @@ app.get('/api/rides/:paramId', authMiddleware, async (req, res, next) => {
     const rideId = req.params.paramId;
 
     if (isNaN(+rideId) || !Number.isInteger(+rideId) || +rideId < 1) {
-      throw new Error(`User with Id ${rideId} does not exist.`);
+      throw new ClientError(400, `Invalid ride id`);
     }
 
     const sql = `
@@ -168,7 +170,7 @@ app.get('/api/rides/:paramId', authMiddleware, async (req, res, next) => {
     const [result] = (await db.query(sql, param)).rows;
 
     if (!result) {
-      throw new Error('Get /api/rides/:paramId Failed');
+      throw new ClientError(404, `Id ${rideId} does not exists.`)
     }
 
     res.status(200).json(result);
@@ -186,15 +188,14 @@ app.get('/api/rides', authMiddleware, async (req, res, next) => {
     `;
 
     const result = (await db.query(sql, [req.user?.id])).rows;
-    if (!result) {
-      throw new Error('failed to get data /rides');
-    }
 
     res.status(200).json(result);
   } catch (error) {
     next(error);
   }
 });
+
+app.use(errorMiddleware)
 
 // Always at the bottom
 app.listen(PORT, () => {
