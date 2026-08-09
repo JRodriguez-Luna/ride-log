@@ -138,17 +138,17 @@ app.post('/api/rides', authMiddleware, async (req, res, next) => {
         avg_speed,
         avg_power,
         ride_date,
-        req.user?.id
+        req.user?.id,
       ])
     ).rows;
     if (!rides) {
-      throw new ClientError(500, `User id ${req.user?.id} does not exists.`)
+      throw new ClientError(500, `User id ${req.user?.id} does not exists.`);
     }
 
     // send status and json
     res.status(201).json(rides);
-  } catch (e) {
-    next(e);
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -170,12 +170,12 @@ app.get('/api/rides/:paramId', authMiddleware, async (req, res, next) => {
     const [result] = (await db.query(sql, param)).rows;
 
     if (!result) {
-      throw new ClientError(404, `Id ${rideId} does not exists.`)
+      throw new ClientError(404, `Id ${rideId} does not exists.`);
     }
 
     res.status(200).json(result);
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 });
 

@@ -5,14 +5,17 @@ type RideFormProps = {
 };
 
 export const RideForm = ({ onAddRide }: RideFormProps) => {
+
   const handleActionSubmit = async (formData: FormData) => {
     try {
       const data = Object.fromEntries(formData);
+      const token = localStorage.getItem('token')
 
-      const response = await fetch('http://localhost:3000/api/rides/', {
+      const response = await fetch('http://localhost:3000/api/rides', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(data),
       });

@@ -13,13 +13,11 @@ export const NavBar = () => {
   return (
     <>
       <nav className='flex justify-center items-center border p-4'>
-        <ul className='flex w-full justify-center gap-5'>
-          {navs.map((nav, index) => (
-            <NavLink to={nav == 'Home' ? '/' : `/${nav}`}>
-              <li key={index}>{nav}</li>
-            </NavLink>
+        <div className='flex w-full justify-center gap-5'>
+          {navs.map((nav) => (
+            <NavLink key={nav} to={nav == 'Home' ? '/' : `/${nav}`}>{nav}</NavLink>
           ))}
-        </ul>
+        </div>
 
         <button
           onClick={handleSignOut}
