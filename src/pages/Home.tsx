@@ -44,7 +44,7 @@ export const Home = () => {
 
   return (
     <div className='flex flex-col gap-2 min-h-dvh'>
-      <main className='flex mx-28 border p-4'>
+      <main className='flex mx-28 my-5 border p-4'>
         {rides.map((ride) => (
           <Card key={ride.id} ride={ride} />
         ))}
