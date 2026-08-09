@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { NavBar } from '../components/NavBar';
 import { Card } from '../components/Card';
 import { RideForm } from '../components/RideForm';
 import { type Rides } from '../types';
+import { useNavigate } from 'react-router';
 
 export const Home = () => {
   const [rides, setRides] = useState<Rides[]>([]);
+  let navigate = useNavigate();
 
   // Add a new ride
   const handleAddRide = (newRide: Rides) => {
@@ -15,7 +16,15 @@ export const Home = () => {
   useEffect(() => {
     const fetchRides = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/rides');
+        // get token from user
+        const token = localStorage.getItem('token');
+        if (!token) navigate('/sign-in');
+
+        const res = await fetch('http://localhost:3000/api/rides', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         // if not ok, throw error
         if (!res.ok) {
@@ -35,7 +44,6 @@ export const Home = () => {
 
   return (
     <div className='flex flex-col gap-2 min-h-dvh'>
-      <NavBar />
       <main className='flex mx-28 border p-4'>
         {rides.map((ride) => (
           <Card key={ride.id} ride={ride} />
