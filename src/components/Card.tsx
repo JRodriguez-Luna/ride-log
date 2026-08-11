@@ -6,7 +6,7 @@ type CardProps = {
 
 export const Card = ({ ride }: CardProps) => {
   return (
-    <div className='flex flex-col h-80 p-4 border gap-5 cursor-pointer'>
+    <div className='flex flex-col h-80 p-4 border gap-5 cursor-pointer bg-white'>
       <p>{ride.title}</p>
       <p>{ride.description}</p>
       <div className='grid grid-cols-2 gap-5'>

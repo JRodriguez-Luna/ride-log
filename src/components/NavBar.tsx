@@ -15,16 +15,22 @@ export const NavBar = () => {
       <nav className='flex justify-center items-center border p-4'>
         <div className='flex w-full justify-center gap-5'>
           {navs.map((nav) => (
-            <NavLink key={nav} to={nav == 'Home' ? '/' : `/${nav}`}>{nav}</NavLink>
+            <NavLink key={nav} to={nav == 'Home' ? '/' : `/${nav}`}>
+              {nav}
+            </NavLink>
           ))}
         </div>
 
-        <button
-          onClick={handleSignOut}
-          className='flex border text-center items-center text-base cursor-pointer'
-        >
-          Sign Out
-        </button>
+        <div className="flex gap-2">
+          {/* Sign Out */}
+          <button
+            onClick={handleSignOut}
+            type='submit'
+            className='border text-center items-center text-base cursor-pointer'
+          >
+            Sign Out
+          </button>
+        </div>
       </nav>
 
       {/* react-router children will appear here - Home, Rides, etc. */}

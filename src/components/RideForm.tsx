@@ -1,21 +1,28 @@
+import { useNavigate } from 'react-router';
 import type { Rides } from '../types';
+useNavigate;
 
 type RideFormProps = {
   onAddRide: (newRide: Rides) => void;
 };
 
 export const RideForm = ({ onAddRide }: RideFormProps) => {
+  let navigate = useNavigate();
 
   const handleActionSubmit = async (formData: FormData) => {
     try {
       const data = Object.fromEntries(formData);
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token');
 
+      if (!token) navigate('/sign-in');
+
+      // Post ride with authorization token
+      // ** Authorization needed else when submitting, it will error.
       const response = await fetch('http://localhost:3000/api/rides', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
@@ -26,7 +33,6 @@ export const RideForm = ({ onAddRide }: RideFormProps) => {
 
       const newRide = await response.json();
       onAddRide(newRide);
-
     } catch (error) {
       console.error('message', error);
     }

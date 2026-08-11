@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router';
 
 export const SignUp = () => {
-  let navigate = useNavigate()
+  let navigate = useNavigate();
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -19,9 +19,9 @@ export const SignUp = () => {
         throw new Error(`Response Status: ${response.status}`);
       }
 
-      navigate('/sign-in')
+      navigate('/sign-in');
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   };
 
@@ -53,11 +53,11 @@ export const SignUp = () => {
 
         {/* Email */}
         <label htmlFor='email'>Email</label>
-        <input 
-          className='border px-1' 
-          name='email' 
-          id='email' 
-          type='email' 
+        <input
+          className='border px-1'
+          name='email'
+          id='email'
+          type='email'
           required
         />
 
@@ -86,6 +86,14 @@ export const SignUp = () => {
           type='submit'
         >
           Sign Up
+        </button>
+
+        {/* Existing user? */}
+        <button
+          onClick={() => navigate('/sign-in')}
+          className='text-blue-500 hover:text-blue-800 underline cursor-pointer'
+        >
+          Alredy have an account? Sign in!
         </button>
       </div>
     </form>

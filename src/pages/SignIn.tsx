@@ -62,6 +62,14 @@ export const SignIn = () => {
         >
           Sign In
         </button>
+
+        {/* Navigate to Sign Up */}
+        <button
+          onClick={() => navigate('/sign-up')}
+          className='text-blue-500 hover:text-blue-800 underline cursor-pointer'
+        >
+          New user? Sign up here!
+        </button>
       </div>
     </form>
   );
