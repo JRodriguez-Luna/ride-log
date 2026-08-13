@@ -201,3 +201,20 @@ app.use(errorMiddleware)
 app.listen(PORT, () => {
   console.log('Listening on port: 3000');
 });
+
+/**
+ * ----------------------------
+ * express.static → In production there is no Vite, React
+ * gets built in plain HTML/CSS/JS(TS) files, and this is what
+ * serves them. It serves the frontend files.
+ * 
+ * ----------------------------
+ * app.get(*) - The catch-all → sends back to index.html,
+ * it exists so React Router works on refresh.
+ * Baically, catch-all returns index.html and React Router figures 
+ * out the rest client-side.
+ * 
+ * NOTE: Order Matters. Catch-all placed before your API route would
+ * swallow them.
+ * ----------------------------
+ */

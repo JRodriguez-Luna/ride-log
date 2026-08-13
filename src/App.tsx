@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router';
-import { Home } from './pages/Home';
-import { NavBar } from './components/NavBar';
+import { Rides } from './pages/Rides';
+import { SideBar } from './components/SideBar';
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 
@@ -13,8 +13,8 @@ function App() {
       <Route path='sign-up' element={<SignUp />} />
 
       {/* Main */}
-      <Route element={<NavBar />}>
-        <Route index element={<Home />} />
+      <Route element={<SideBar />}>
+        <Route index element={<Rides />} />
       </Route>
     </Routes>
   );

@@ -1,4 +1,4 @@
-export type Rides = {
+export type Ride = {
   id: number;
   title: string;
   description: string;
