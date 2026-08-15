@@ -47,26 +47,12 @@ export const Rides = () => {
   }, []);
 
   return (
-    <div className='flex flex-col gap-2 min-h-dvh bg-[#161826] pt-1'>
-      <div className='flex justify-center'>
-        {/* Add Ride */}
-        <button
-          onClick={() => setIsOpen(true)}
-          className='w-12.5 h-7.5 justify-center gap-3 border cursor-pointer px-2 items-center text-center rounded-xl bg-blue-100'
-        >
-          +
-        </button>
-      </div>
-      <main className='grid grid-cols-4 gap-5 mx-28 my-5 border p-4'>
-        {rides.map((ride) => (
-          <Card key={ride.id} ride={ride} />
-        ))}
-
-        {/* Form */}
-        <Modal isOpen={isOpen} onClose={handleClose}>
-          <RideForm onAddRide={handleAddRide} />
-        </Modal>
-      </main>
-    </div>
+    // Main Section of Content
+    <main className='flex flex-col gap-2 pt-1'>
+      {/* Form Module */}
+      <Modal isOpen={isOpen} onClose={handleClose}>
+        <RideForm onAddRide={handleAddRide} />
+      </Modal>
+    </main>
   );
 };
