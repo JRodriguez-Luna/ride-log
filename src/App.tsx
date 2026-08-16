@@ -1,8 +1,9 @@
 import { Route, Routes } from 'react-router';
-import { Home } from './pages/Home';
-import { NavBar } from './components/NavBar';
+import { Rides } from './pages/Rides';
+import { Nav } from './components/Nav';
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
+import { Stats } from './pages/Stats';
 
 function App() {
 
@@ -13,8 +14,9 @@ function App() {
       <Route path='sign-up' element={<SignUp />} />
 
       {/* Main */}
-      <Route element={<NavBar />}>
-        <Route index element={<Home />} />
+      <Route element={<Nav />}>
+        <Route index element={<Rides />} />
+        <Route path='stats' element={<Stats />} />
       </Route>
     </Routes>
   );

@@ -1,14 +1,14 @@
-import { type Rides } from '../types' 
+import { type Ride } from '../types' 
 
 type CardProps = {
-  ride: Rides,
+  ride: Ride,
 }
 
 export const Card = ({ ride }: CardProps) => {
   return (
-    <div className='flex flex-col h-80 p-4 border gap-5 cursor-pointer bg-white'>
-      <p>{ride.title}</p>
-      <p>{ride.description}</p>
+    <div className='flex flex-col justify-evenly h-auto p-4 border gap-5 cursor-pointer bg-white'>
+      <h3 className='text-xl'>{ride.title}</h3>
+      <p className='text-base wrap-break-word min-w-0'>{ride.description}</p>
       <div className='grid grid-cols-2 gap-5'>
         {/* Distance */}
         <div className='flex flex-col gap-1'>

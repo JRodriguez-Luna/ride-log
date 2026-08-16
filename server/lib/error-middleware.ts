@@ -23,3 +23,12 @@ export const errorMiddleware = (
     })
   }
 };
+
+/**
+ * The four params explained:
+ * Express looks at how many arguments your function takes.
+ * 
+ * 3 params → Express treats it as normal middleware, so errors never reach it
+ * 4 params → this one handles errors, Express sends errors
+ * 
+ */

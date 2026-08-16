@@ -1,2 +1,11 @@
 @import "tailwindcss";
 
+@theme {
+  --color-panel: #13141F;
+  --color-surface: #161826;
+  --color-border: #282B31;
+  --color-active: #1E1F30;
+  --color-hover: #1A1B27;
+  --color-muted: #8B8E99;
+  --color-outline: #35374A;
+}

@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router';
-import type { Rides } from '../types';
+import type { Ride } from '../types';
 useNavigate;
 
 type RideFormProps = {
-  onAddRide: (newRide: Rides) => void;
+  onAddRide: (newRide: Ride) => void;
 };
 
 export const RideForm = ({ onAddRide }: RideFormProps) => {
