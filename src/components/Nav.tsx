@@ -32,11 +32,11 @@ export const Nav = () => {
         {/* Logo */}
         <div className='flex items-center px-6 py-7'>
           <img
-            className='h-6 w-6 rounded-md'
-            src='/attaque_logo.png'
+            className='h-10 w-10'
+            src='/attaque-lime.png'
             alt='attaque logo'
           />
-          <span className='text-2xl font-bold tracking-tight text-white'>
+          <span className='text-2xl font-bold text-white'>
             ttaque
           </span>
         </div>
@@ -75,7 +75,7 @@ export const Nav = () => {
       </nav>
 
       {/* react-router children will appear here - Home, Rides, etc. */}
-      <div className="flex-1">
+      <div className='flex-1'>
         <Outlet />
       </div>
     </div>

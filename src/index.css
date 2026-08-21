@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-panel: #13141F;
-  --color-surface: #161826;
-  --color-border: #282B31;
-  --color-active: #1E1F30;
-  --color-hover: #1A1B27;
-  --color-muted: #8B8E99;
-  --color-outline: #35374A;
+  --color-panel: #1A0B2E;      /* sidebar — darkest */
+  --color-surface: #24103F;    /* main background */
+  --color-raised: #2E1650;     /* stat card, table hover */
+  --color-border: #3D2464;     /* dividers, input outlines */
+  --color-active: #3A1F63;     /* selected nav item */
+  --color-hover: #2C1449;      /* nav hover */
+  --color-outline: #4A2D78;    /* avatar ring, subtle edges */
+  --color-muted: #A99BC4;      /* secondary text */
+  --color-accent: #95F98A;     /* the lime */
+  --color-slight-accent: #76df6b;
 }

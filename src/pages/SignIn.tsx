@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router';
+import { Input } from '../components/Input.tsx';
 
 export const SignIn = () => {
   let navigate = useNavigate();
@@ -31,45 +32,50 @@ export const SignIn = () => {
   return (
     <form
       action={handleSubmit}
-      className='flex flex-col justify-center items-center border gap-10 h-dvh'
+      className='flex flex-col justify-center items-center bg-panel border h-dvh'
     >
-      <h1 className='text-7xl'>Welcome!</h1>
+      <div className='flex flex-col items-center w-full p-4 gap-5 text-white'>
+        <div className='flex items-center px-6 py-7'>
+          <img
+            className='h-auto w-15'
+            src='/attaque-lime.png'
+            alt='attaque logo'
+          />
+          <span className='text-4xl font-semibold text-white'>ttaque</span>
+        </div>
 
-      <div className='flex flex-col border p-4 gap-5'>
+        {/* title */}
+        <h1 className='text-5xl text-accent font-semibold'>Sign in</h1>
+        {/* Motto */}
+        <p className="text-lg text-gray-400">Please login to continue to your account</p>
+
         {/* Username */}
-        <label htmlFor='username'>Username</label>
-        <input
-          className='border px-1'
-          name='username'
-          id='username'
-          type='text'
-          required
-        />
+        <Input name='username' type='text' className='w-full' />
 
         {/* Password */}
-        <label htmlFor='password'>Password</label>
-        <input
-          className='border px-1'
-          name='password'
-          id='password'
-          type='password'
-          required
-        />
+        <Input name='password' type='text' className='w-full' />
+
+        {/* Keep me logged in feature - Soon */}
 
         <button
-          className='border bg-gray-100 hover:bg-gray-300  p-4 cursor-pointer'
+          className='flex w-full justify-center text-black font-semibold text-lg border bg-accent hover:bg-slight-accent rounded-xl p-4 cursor-pointer'
           type='submit'
         >
-          Sign In
+          Sign in
         </button>
 
         {/* Navigate to Sign Up */}
         <button
           onClick={() => navigate('/sign-up')}
-          className='text-blue-500 hover:text-blue-800 underline cursor-pointer'
+          className='text-gray-400 cursor-pointer'
         >
-          New user? Sign up here!
+          Need an account?{' '}
+          <span className='text-accent hover:text-slight-accent underline'>
+            Create one!
+          </span>
         </button>
+
+        {/* Google Login - Soon */}
       </div>
     </form>
   );
